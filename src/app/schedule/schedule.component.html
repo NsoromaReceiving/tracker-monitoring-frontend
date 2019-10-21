@@ -30,6 +30,12 @@
             <div class="form-group"><label class="col-lg-2 control-label m-t m-b">Schedule Name</label>
               <div class="col-lg-10 m-t m-b">
                 <input formControlName="scheduleName" type="text" placeholder="--Schedule Name--" class="form-control">
+                <h5 *ngIf="(scheduleName.dirty || scheduleName.touched) && scheduleName.invalid && scheduleName.errors.required" class="text-danger text-right">
+                  Schedule name is required.
+                </h5>
+                <h5 *ngIf="(scheduleName.dirty || scheduleName.touched) && scheduleName.invalid && scheduleName.errors.minlength" class="text-danger text-right">
+                  Schedule name must be at least 5 characters long.
+                </h5>
               </div>
             </div>
             <div class="hr-line-dashed"></div>
@@ -38,6 +44,12 @@
             <div class="form-group"><label class="col-lg-2 control-label m-t m-b">Reciepient Email</label>
               <div class="col-lg-10 m-t m-b">
                 <input formControlName="email" type="email" placeholder="--Reciepient Email--" class="form-control" required>
+                <h5 *ngIf="(email.dirty || email.touched) && email.invalid && email.errors.required" class="text-danger text-right">
+                  Email is required.
+                </h5>
+                <h5 *ngIf="(email.dirty || email.touched) && email.invalid && email.errors.email" class="text-danger text-right">
+                  Please provide a valid email format.
+                </h5>
               </div>
             </div>
             <div class="hr-line-dashed"></div>

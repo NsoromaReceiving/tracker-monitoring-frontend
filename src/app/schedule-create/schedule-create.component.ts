@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { APIcallsService } from '../apicalls.service';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
 
@@ -71,8 +71,8 @@ export class ScheduleCreateComponent implements OnInit {
       this.customerCtrl = new FormControl();
 
       this.scheduleForm = new FormGroup({
-        scheduleName: new FormControl(),
-        email: new FormControl(),
+        scheduleName: new FormControl(null, [Validators.required, Validators.minLength(5)]),
+        email: new FormControl(null, [Validators.required, Validators.email]),
         fileFormat: new FormControl(),
         alertStartDate: new FormControl(),
         alertStartTime: new FormControl(),
@@ -117,27 +117,33 @@ export class ScheduleCreateComponent implements OnInit {
     }
 
     const fullAlertTime = new Date(alertDate + ' ' + alertTime);
-    const zonId = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log(zonId);
-    const newSchedule: Schedule = {
-      email: schedule.email,
-      subject: schedule.scheduleName,
-      customerId: this.selectedCustomer,
-      startDate: schedule.filterStartDate,
-      endDate: schedule.filterEndDate,
-      status: schedule.filterStatus,
-      trackerType: schedule.filterModel,
-      alertTime: fullAlertTime.toISOString(),
-      alertFrequency: schedule.alertFrequency,
-      zoneId: zonId
-    };
+    if (fullAlertTime > new Date()) {
+      const zonId = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      console.log(zonId);
+      const newSchedule: Schedule = {
+        email: schedule.email,
+        subject: schedule.scheduleName,
+        customerId: this.selectedCustomer,
+        startDate: schedule.filterStartDate,
+        endDate: schedule.filterEndDate,
+        status: schedule.filterStatus,
+        trackerType: schedule.filterModel,
+        alertTime: fullAlertTime.toISOString(),
+        alertFrequency: schedule.alertFrequency,
+        zoneId: zonId
+      };
 
-    console.log(newSchedule);
-    this.apiService.createSchedule(newSchedule).subscribe((response) => {
-      if (response === null) {
-        Swal.fire('Great', 'Schedule Created!', 'success');
-      }
-    });
+      console.log(newSchedule);
+      this.apiService.createSchedule(newSchedule).subscribe((response) => {
+        if (response === null) {
+          Swal.fire('Great', 'Schedule Created!', 'success');
+          this.scheduleForm.reset();
+        }
+      });
+    } else {
+      Swal.fire('Sorry could not create "' + schedule.scheduleName + '" schedule !',
+      'Please make sure you select a future alert Date and Time.', 'error');
+    }
 
   }
 
@@ -165,6 +171,16 @@ export class ScheduleCreateComponent implements OnInit {
 
   customerDisplayFunction(customer?: any): string | undefined {
     return customer ? customer.customerName : undefined;
+  }
+
+
+
+  get scheduleName() {
+    return this.scheduleForm.get('scheduleName');
+  }
+
+  get email() {
+    return this.scheduleForm.get('email');
   }
 
 }
