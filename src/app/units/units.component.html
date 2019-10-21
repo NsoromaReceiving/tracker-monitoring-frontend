@@ -1,0 +1,318 @@
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Units</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+    
+
+<div class="wrapper wrapper-content">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+    <div class="ibox float-e-margins">
+       
+        <div class="ibox-content">
+
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="widget style1 blue-bg">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <i class="fa fa-signal  fa-2x"></i>
+                            </div>
+                            <div class="col-xs-8 text-right">
+                                <h3 class="font-bold">{{ activeTrackers }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <span> Active </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="widget style1 red-bg">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <i class="fa fa-ban fa-2x"></i>
+                            </div>
+                            <div class="col-xs-8 text-right">
+                                <h3 class="font-bold">{{ offlineTrackers }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <span> Offliine </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="widget style1 yellow-bg">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <i class="fa fa-sort-amount-desc fa-2x"></i>
+                            </div>
+                            <div class="col-xs-8 text-right">
+                                <h3 class="font-bold">{{ signalLostTrackers }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <span> Signal Lost </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="widget style1 lazur-bg">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <i class="fa fa-spinner fa-2x"></i>
+                            </div>
+                            <div class="col-xs-8 text-right">
+                                <h3 class="font-bold">{{ idleTrackers }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <span> Idle </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="widget style1 navy-bg">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <i class="fa fa-certificate fa-2x"></i>
+                            </div>
+                            <div class="col-xs-8 text-right">
+                                <h3 class="font-bold">{{ justRegisteredTrackers }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <span> Just Registered </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 pull-right">
+                    <div class="widget style1">
+                        <div class="row">
+                            <div class="col-xs-4 text-center">
+                                <i class="fa fa-th-list fa-2x"></i>
+                            </div>
+                            <div class="col-xs-8 text-right">
+                                <h3 class="font-bold">{{ totalTrackers }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <span> Total Units </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+
+                <!--end of unit group row-->
+        </div>
+       
+    </div>
+  </div>
+
+  <!--Row end-->
+
+
+
+  
+        <div class="col-lg-12">
+          <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                    <div class="ibox-tools">
+                            <button (click)="refresh()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Refresh Tracker State"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div> 
+              </div>
+              
+              <div class="ibox-content">
+
+                <div class="row">
+                    <div class="col col-lg-3">
+                        <h5>Start Date</h5>
+                        <div class="form-group" id="data_1">
+                            <div class="input-group date" style="width:100%">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" 
+                                class="form-control" [value]="startDate" #StartDate>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col col-lg-3">
+                            <h5>End Date</h5>
+                            <div class="form-group" id="data_1">
+                                <div class="input-group date" style="width:100%">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" 
+                                    class="form-control" [value]="endDate" #EndDate>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    <!-- Stop Type-->
+                    <div class="col-lg-3">
+                        <h5>Tracker Type</h5>
+                        <div class="input-group m-b">
+                            <span class="input-group-addon"><i class="fa fa-stop"></i></span>
+                            <select class="form-control m-b" name="filter" #trackerType>
+                            <option>All</option>
+                            <option>bcefm_light</option>
+                            <option>bce_fms500_light_vt</option>
+                            <option>qlgv300_n</option>
+                            <option>concoxgt06n_gt800</option>
+                            <option>bce_fms500_light</option>
+                            <option>bce_fms500_one</option>
+                            <option>qlgv300_n_vt</option>
+                            <option>qlgv55</option>
+                            <option>qlgv65</option>]
+                            <option>telfmb640</option>
+                            <option>telfmb120</option>
+                            <option>telfma120_fw0119_vt</option>
+                            <option>navixymobile_xgps</option>]
+                            <option>concoxgt100</option>
+                            <option>qlgv65_vt</option>
+                            <option>concox_at4</option>
+                            <option>qlgv55_vt</option>
+                            <option>concoxgt100_vt</option>
+                            <option>telfma120_fw0119</option>
+                            <option>bce_fms500_stcan_vt</option>
+                            <option>qlgmt200_vt</option>
+                            <option>concox_x1</option>
+                            <option>telfmb630</option>
+                            <option>box</option>
+                            <option>qlgv320</option>
+                            <option>qlgv300</option>
+                            <option>qlgv65_n</option>
+                            <option>telfmb120_vt_b120</option>
+                            <option>qlgv320_vt</option>
+                            <option>qlgl500_vt</option>
+                            <option>box2_vt</option>
+                            <option>mobile_unknown_xgps</option>
+                            <option>concox_at2</option>
+                            <option>qlgl500_qlgl505</option>
+                            <option>box2</option>
+                            <option>qlgv55lite</option>
+                            <option>concox_wetrack2</option>
+                            <option>iosnavixytracker_xgps</option>
+                            <option>qlgv500</option>
+                            <option>box_vt</option>
+                            <option>bce_fms500_stcan</option>
+                            <option>concox_x3</option>
+                            <option>telfmb001</option>
+                            <option>jimi_jc100</option>
+                        </select>
+                        </div>
+                    </div>
+                    
+                    <!--Completed-->
+                    <div class="col-lg-3">
+                        <h5>Status</h5>
+                        <div class="input-group m-b">
+                            <span class="input-group-addon"><i class="fa fa-circle-o-notch"></i></span>
+                            <select class="form-control m-b" name="filter" #status>
+                            <option>All</option>
+                            <option>active</option>
+                            <option>offline</option>
+                            <option>signal_lost</option>
+                            <option>idle</option>
+                            <option>just_registered</option>
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3" style="padding: 0px;">
+                        <mat-form-field class="example-full-width col-lg-12" >
+                            <input matInput placeholder="Select Customer Trackers" (input)="customerTextChange($event.target.value)" aria-label="State" [matAutocomplete]="auto" [formControl]="customerCtrl">
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="setCustomer($event)" [displayWith]="customerDisplayFunction">
+                                <mat-option *ngFor="let customer of searchedCustomers" [value]="customer">
+                                <span>{{ customer.customerName }}</span>
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    
+                    <!--Imei-->
+                    
+                    
+                    <!--searchBtn-->
+                    <div class="col-lg-3">
+                        <div class="input-group" style="margin-top: 10px;">
+                            <button type="button" class="btn btn-primary" (click)="getTrackers(StartDate.value, EndDate.value, trackerType.value, status.value)">
+                                <i class="fa fa-search"></i><span> Search</span>
+                            </button> 
+                        </div>
+                    </div>
+                </div>                
+  
+                <table class="footable table toggle-arrow-tiny table-striped" data-page-size="50" data-filter=#filter id="tblData">
+                    <thead>
+                    <tr>
+                        <th>IMEI</th>
+                        <th data-hide="phone">COMPANY</th>
+                        <th data-hide="phone">REGISTRATION NO.</th>
+                        <th data-hide="phone">LAST GPS UPDATE</th>
+                        <th data-hide="phone">STATUS</th>
+                        <th class="text-right">ACTION</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let trackerState of trackerStates">
+                            <td>{{trackerState.imei}}</td>
+                            <td>{{trackerState.customerName}}</td>
+                            <td>{{trackerState.label}}</td>
+                            <td>{{trackerState.lastGpsUpdate}}</td>
+                            <td><span class="label pull-left" [ngClass]="{'label-success':trackerState.connectionStatus === 'active',
+                            'label-danger':trackerState.connectionStatus === 'offline', 
+                            'label-warning':trackerState.connectionStatus === 'signal_lost', 
+                            'label-info' : trackerState.connectionStatus === 'idle', 
+                            'label-primary' : trackerState.connectionStatus === 'just_registered' }">{{trackerState.connectionStatus}}</span>
+                            </td>
+                            <td class="text-right">
+                                <div class="btn-group">
+                                    <button class="btn-white btn btn-xs" (click)="trackerStateNavigate(trackerState.trackerId)"><i class="fa fa-folder"></i> View</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7" class="footable-visible">
+                                <ul class="pagination pull-right"></ul>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+  
+              </div>
+          </div>
+    </div>
+    <!--Row end-->
+        </div>
+    
+    
+</div>

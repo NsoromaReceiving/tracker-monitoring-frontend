@@ -1,0 +1,68 @@
+<!--The content below is only a placeholder and can be replaced.-->
+
+
+
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> 
+                      <span>
+                        <img alt="image" class="img-circle" src="assets/profile_user.png" />
+                      </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Nsoroma</strong>
+                             </span> <span class="text-muted text-xs block">Nsoroma Tech Team</span> </span> </a>
+                    </div>
+                    <div class="logo-element">
+                        <p>NS TMS</p>
+                    </div>
+                </li>
+               
+
+                <li>
+                    <a (click)="unitsNavigate()"><i class="fa fa-location-arrow"></i> <span class="nav-label">Units</span></a>
+                </li>
+
+                <li>
+                    <a (click)="schedulesNavigate()"><i class="fa fa-calendar"></i> <span class="nav-label">Schedules</span></a>
+                </li>
+               
+            </ul>
+  
+        </div>
+    </nav>
+  
+  <div id="page-wrapper" class="gray-bg">
+       <!--top nav bar-->
+       <div class="row border-bottom">
+              <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+              <div class="navbar-header">
+                  <a class="navbar-minimalize minimalize-styl-2 btn btn-primary" ><i class="fa fa-bars"></i> </a>
+                  
+                  <div class="navbar-form-custom" style="padding: 18px 0px 5px 10px; ">
+                      <img alt="logo" style="width: 8em;" src="assets/logo.png" />
+                  </div>
+              </div>
+                  <ul class="nav navbar-top-links navbar-right">
+                      <li>
+                          <span class="m-r-sm text-muted welcome-message">Nsoroma Tracker Monitoring System</span>
+                      </li>
+      
+                      <li>
+                          <a href="login.html" style="font-size: 14px;">
+                              <i class="fa fa-sign-out"></i> Log out
+                          </a>
+                      </li>
+                      
+                  </ul>
+      
+              </nav>
+          </div>
+      <router-outlet></router-outlet>
+  </div>
+  
+  
+  </div> 
+  

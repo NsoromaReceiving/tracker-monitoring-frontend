@@ -1,0 +1,132 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+
+  <div class="row">
+      <div class="col-lg-12">
+
+          <div class="ibox product-detail">
+              <div class="ibox-content">
+
+                  <div class="row">
+
+                      <div class="col-md-6">
+
+                          <h2 class="font-bold m-b-xs">
+                              IMEI: {{ imei }}
+                          </h2>
+                          <small>Tracker Id: {{trackerId}}</small>
+                          <div class="m-t-md">
+                            <dd><span class="label" [ngClass]="{'label-success':connectionStatus === 'active',
+                              'label-danger':connectionStatus === 'offline', 
+                              'label-warning':connectionStatus === 'signal_lost', 
+                              'label-info' : connectionStatus === 'idle', 
+                              'label-primary' : connectionStatus === 'just_registered' }">{{ connectionStatus }}</span></dd>
+                          </div>
+                          <hr>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Last Date Time</dt>
+                            <dd class="col-sm-7">{{ lastGpsUpdate }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Label:</dt>
+                            <dd class="col-sm-7">{{ label }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Customer:</dt>
+                            <dd class="col-sm-7">{{ customerName }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Customer Id:</dt>
+                            <dd class="col-sm-7">{{ customerid }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Phone Number:</dt>
+                            <dd class="col-sm-7">{{ phoneNumber }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Tracker Model:</dt>
+                            <dd class="col-sm-7">{{ trackerModel }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Latitude:</dt>
+                            <dd class="col-sm-7">{{ latitude }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Logitude:</dt>
+                            <dd class="col-sm-7">{{ longitude }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Last Gps Signal Level:</dt>
+                            <dd class="col-sm-7">{{ lastGpsSignalLevel }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Last Battery Level:</dt>
+                            <dd class="col-sm-7">{{ lastBatteryLevel }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">
+                            <dt class="col-sm-5">Last Gsm Signal Level:</dt>
+                            <dd class="col-sm-7">{{ lastGsmLevel }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">    
+                            <dt class="col-sm-5">Gsm Network Name:</dt>
+                            <dd class="col-sm-7">{{ networkName }}</dd>
+                          </dl>
+
+                          <dl class="row m-t-md small">    
+                              <dt class="col-sm-5">Tarrif End Date:</dt>
+                              <dd class="col-sm-7">{{ tariffEndDate }}</dd>
+                            </dl>
+                          
+                          <hr>
+
+                          <div>
+                              <div class="btn-group">
+                                <button class="btn btn-white btn-sm"><i class="fa fa-file-pdf-o"></i> export to PDF </button>
+                              </div>
+                          </div>
+
+
+
+                      </div>
+
+                      <div class="col-md-6">
+                        
+                        <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="8" [zoomControl]="true" [fullscreenControl]="true" 
+                        [disableDoubleClickZoom]="false"
+                        [mapTypeControl]="true">
+
+                          <agm-marker [latitude]="latitude" [longitude]="longitude">
+                            <agm-info-window>
+                              <strong>last known loacation</strong>
+                            </agm-info-window>
+                          </agm-marker>
+                        </agm-map>
+                        
+                      </div>
+
+                  </div>
+
+              </div>
+              <div class="ibox-footer">
+                  <span class="pull-right">
+                      Time - <i class="fa fa-clock-o"></i> {{ timeStamp }}
+                  </span>
+                  Nsoroma Gps
+              </div>
+          </div>
+
+      </div>
+  </div>
+  <!--end of row-->
+</div>

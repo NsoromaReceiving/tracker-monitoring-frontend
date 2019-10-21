@@ -1,0 +1,36 @@
+
+
+li a {
+    
+}
+
+span {
+    font-size: 13px;
+}
+
+.label {
+    font-size: 9px;
+}
+
+td{
+    font-size: 12px;
+}
+
+th {
+    font-size: 13px;
+}
+
+
+.customer a{
+    font-size: 13px;
+    color: #1a97c7;
+	background-color: white; 
+	border:#1a97c7 solid 1px; width: 100%; 
+	box-shadow: 0px 2px 2px #1a97c7;
+	margin: 0px 0px 25px 0px;
+  }
+
+.customer a:hover{
+    background-color:  #1a97c7 ;
+    color: white;
+}
