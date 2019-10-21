@@ -62,8 +62,6 @@ export class ScheduleComponent implements OnInit {
     });
     this.activatedRoute.params.subscribe((scheduleid) => {
 
-      this.customerCtrl = new FormControl();
-
       this.scheduleForm = new FormGroup({
         scheduleName: new FormControl(null, [Validators.required, Validators.minLength(5)]),
         email: new FormControl(null, [Validators.required, Validators.email]),
@@ -84,9 +82,22 @@ export class ScheduleComponent implements OnInit {
       console.log(this.scheduleId);
       this.apiService.getSchedule(this.scheduleId).subscribe((schedule) => {
         this.schedule = schedule;
-        console.log(this.schedule.alertFrequency);
+        // get customers
+        this.apiService.getCustomers().subscribe((customers: any) => {
+          this.customers = customers;
+          this.searchedCustomers = customers;
+          if (this.schedule.customerId != null) {
+            try {
+              const customer = this.searchedCustomers.filter((filCustomer: Customer) =>
+              filCustomer.customerId === this.schedule.customerId)[0];
+              this.scheduleForm.controls.filterCustomer.setValue(customer);
+            } catch (e) {
+              Swal.fire('Warning', 'Customer with Id: ' + this.schedule.customerId, 'error');
+            }
+          }
+        });
+
         const date = new Date(this.schedule.alertTime);
-        console.log(date);
         this.scheduleForm.controls.scheduleName.setValue(this.schedule.subject);
         this.scheduleForm.controls.email.setValue(this.schedule.email);
         this.scheduleForm.controls.fileFormat.setValue('Excell Sheet');
@@ -101,7 +112,6 @@ export class ScheduleComponent implements OnInit {
         this.scheduleForm.controls.alertFrequency.setValue(this.schedule.alertFrequency);
         this.scheduleForm.controls.filterStatus.setValue(this.schedule.status);
         this.scheduleForm.controls.filterModel.setValue(this.schedule.trackerType);
-        this.scheduleForm.controls.filterCustomer.setValue(this.schedule.customerId);
 
         if (this.schedule.startDate === null || this.schedule.endDate === null) {
           this.schedule.startDate = 'none';
@@ -112,12 +122,6 @@ export class ScheduleComponent implements OnInit {
 
         // this.scheduleForm.disable();
     });
-    });
-
-    // get customers
-    this.apiService.getCustomers().subscribe((customers: any) => {
-      this.customers = customers;
-      this.searchedCustomers = customers;
     });
   }
 
@@ -145,15 +149,13 @@ export class ScheduleComponent implements OnInit {
 
     const fullAlertTime = new Date(alertDate + ' ' + alertTime);
     if (fullAlertTime > new Date()) {
-      console.log(fullAlertTime);
-      console.log(new Date());
       const zonId = Intl.DateTimeFormat().resolvedOptions().timeZone;
       console.log(filterStartDate);
       console.log(filterEndDate);
       const newSchedule: Schedule = {
         email: schedule.email,
         subject: schedule.scheduleName,
-        customerId: schedule.filterCustomer,
+        customerId: schedule.filterCustomer.customerId,
         startDate: filterStartDate,
         endDate: filterEndDate,
         status: schedule.filterStatus,
