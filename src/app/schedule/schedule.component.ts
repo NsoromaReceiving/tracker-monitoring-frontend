@@ -145,6 +145,8 @@ export class ScheduleComponent implements OnInit {
 
     const fullAlertTime = new Date(alertDate + ' ' + alertTime);
     if (fullAlertTime > new Date()) {
+      console.log(fullAlertTime);
+      console.log(new Date());
       const zonId = Intl.DateTimeFormat().resolvedOptions().timeZone;
       console.log(filterStartDate);
       console.log(filterEndDate);
