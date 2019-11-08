@@ -1,12 +1,8 @@
 FROM node:10-alpine AS Builder
-COPY package.json package-lock.json ./
-RUN npm ci && mkdir /ng-app && mv ./node_modules ./ng-app
-WORKDIR /ng-app
+WORKDIR /app
 COPY . .
-RUN npm run ng build -- --prod --output-path=dist
+RUN npm install
+RUN npm run build --prod
 
 FROM nginx:alpine
-COPY nginx/default.conf /etc/nginx/conf.d/
-RUN rm -rf /usr/share/nginx/html/*
-COPY --from=Builder /ng-app/dist /usr/share/nginx/html
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from:Builder /app/dist/mg-app usr/share/nginx/html
