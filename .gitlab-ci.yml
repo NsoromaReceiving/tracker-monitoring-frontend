@@ -19,5 +19,5 @@ docker-build:
     - export IMAGE=hawkmanlabs/tracker-monitoring-template
     - export IMAGET1=hawkmanlabs/tracker-monitoring-template:$CI_COMMIT_REF_SLUG
     - export IMAGET2=hawkmanlabs/tracker-monitoring-template:stable
-    - docker build --pull -t IMAGET1 -t IMAGET2 .
+    - docker build --pull -t $IMAGET1 -t $IMAGET2 .
     - docker push $IMAGE
