@@ -1,4 +1,10 @@
+image: docker:19.03.0
+    
+services:
+    - docker:19.03.0-dind
 
+stages:
+    - build
 
 docker-build:
   # Official docker image.
