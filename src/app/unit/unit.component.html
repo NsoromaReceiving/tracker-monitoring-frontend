@@ -95,16 +95,13 @@
                                 <button class="btn btn-white btn-sm"><i class="fa fa-file-pdf-o"></i> export to PDF </button>
                               </div>
                           </div>
-
-
-
                       </div>
 
                       <div class="col-md-6">
                         
-                        <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="8" [zoomControl]="true" [fullscreenControl]="true" 
+                        <agm-map (mapReady)="getMapInstance($event)" [zoom]="15" [zoomControl]="true" [fullscreenControl]="true" 
                         [disableDoubleClickZoom]="false"
-                        [mapTypeControl]="true">
+                        [mapTypeControl]="true" [usePanning]="true">
 
                           <agm-marker [latitude]="latitude" [longitude]="longitude">
                             <agm-info-window>
@@ -112,11 +109,8 @@
                             </agm-info-window>
                           </agm-marker>
                         </agm-map>
-                        
                       </div>
-
                   </div>
-
               </div>
               <div class="ibox-footer">
                   <span class="pull-right">

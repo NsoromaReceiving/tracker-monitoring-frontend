@@ -91,6 +91,9 @@ export class UnitsComponent implements OnInit {
     if (status === 'All') {
       status =  null;
     }
+    console.log(startDate);
+
+    console.log(endDate);
     startDate = new Date(startDate);
     endDate = new Date(endDate);
     startDate = this.dateFormat(startDate);

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIcallsService } from '../apicalls.service';
+import { AgmMap } from '@agm/core';
 
 @Component({
   selector: 'app-unit',
@@ -18,14 +19,16 @@ export class UnitComponent implements OnInit {
   customerid = '';
   phoneNumber = '';
   trackerModel = '';
-  latitude = '';
-  longitude = '';
+  latitude;
+  longitude;
   lastGpsSignalLevel = '';
   lastBatteryLevel = '';
   lastGsmLevel = '';
   networkName = '';
   tariffEndDate = '';
   timeStamp;
+
+  agmMap: any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
               private apiService: APIcallsService) { }
@@ -51,8 +54,13 @@ export class UnitComponent implements OnInit {
         this.tariffEndDate = trackerState.tariffEndDate;
         const date = new Date();
         this.timeStamp = date.toUTCString();
+        this.agmMap.panTo({lat: Number(this.latitude), lng: Number(this.longitude)});
       });
     });
+  }
+
+  getMapInstance(map) {
+    this.agmMap = map;
   }
 
 }

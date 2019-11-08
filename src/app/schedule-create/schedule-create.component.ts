@@ -91,8 +91,6 @@ export class ScheduleCreateComponent implements OnInit {
       this.scheduleForm.controls.filterModel.setValue('All');
       this.scheduleForm.controls.alertStartTime.setValue(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds());
       this.scheduleForm.controls.filterCustomer.setValue();
-      this.scheduleForm.controls.filterStartDate.setValue('none');
-      this.scheduleForm.controls.filterEndDate.setValue('none');
     });
 
 
@@ -103,6 +101,12 @@ export class ScheduleCreateComponent implements OnInit {
   }
 
   onSubmit(schedule, alertDate, filterStartDate, filterEndDate, alertTime) {
+    filterStartDate = new Date(filterStartDate);
+    filterEndDate = new Date(filterEndDate);
+    filterStartDate = this.dateFormat(filterStartDate);
+    filterEndDate = this.dateFormat(filterEndDate);
+    console.log(filterStartDate);
+    console.log(filterEndDate);
     if (schedule.filterStartDate === 'none' || schedule.filterEndDate === 'none') {
       schedule.filterEndDate = null;
       schedule.filterStartDate = null;
@@ -124,8 +128,8 @@ export class ScheduleCreateComponent implements OnInit {
         email: schedule.email,
         subject: schedule.scheduleName,
         customerId: this.selectedCustomer,
-        startDate: schedule.filterStartDate,
-        endDate: schedule.filterEndDate,
+        startDate: filterStartDate,
+        endDate: filterEndDate,
         status: schedule.filterStatus,
         trackerType: schedule.filterModel,
         alertTime: fullAlertTime.toISOString(),
@@ -181,6 +185,20 @@ export class ScheduleCreateComponent implements OnInit {
 
   get email() {
     return this.scheduleForm.get('email');
+  }
+
+  dateFormat(date): string {
+    return date.getFullYear()
+              + '-' + this.leftpad(date.getMonth() + 1, 2)
+              + '-' + this.leftpad(date.getDate(), 2)
+              + ' ' + this.leftpad(date.getHours(), 2)
+              + ':' + this.leftpad(date.getMinutes(), 2)
+              + ':' + this.leftpad(date.getSeconds(), 2);
+  }
+
+  leftpad(val, resultLength = 2, leftpadChar = '0'): string {
+    return (String(leftpadChar).repeat(resultLength)
+          + String(val)).slice(String(val).length);
   }
 
 }

@@ -85,6 +85,7 @@ export class ScheduleComponent implements OnInit {
         // get customers
         this.apiService.getCustomers().subscribe((customers: any) => {
           this.customers = customers;
+          this.customers.push({customerName: 'NONE', customerId: null});
           this.searchedCustomers = customers;
           if (this.schedule.customerId != null) {
             try {
@@ -117,8 +118,11 @@ export class ScheduleComponent implements OnInit {
           this.schedule.startDate = 'none';
           this.schedule.endDate = 'none';
         }
-        this.scheduleForm.controls.filterStartDate.setValue(this.schedule.startDate);
-        this.scheduleForm.controls.filterEndDate.setValue(this.schedule.endDate);
+        const startDate = new Date(this.schedule.startDate);
+        const endDate = new Date(this.schedule.endDate);
+        this.scheduleForm.controls.filterStartDate.setValue(startDate.getMonth() +
+        1 + '/' + startDate.getDate() + '/' + date.getFullYear());
+        this.scheduleForm.controls.filterEndDate.setValue(endDate.getMonth() + 1 + '/' + endDate.getDate() + '/' + endDate.getFullYear());
 
         // this.scheduleForm.disable();
     });
@@ -131,7 +135,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   onSubmit(schedule, alertDate, filterStartDate, filterEndDate, alertTime) {
-    if (schedule.filterStartDate === 'none' || schedule.filterEndDate === 'none') {
+    if (schedule.filterStartDate === '' || schedule.filterEndDate === '') {
       schedule.filterEndDate = null;
       schedule.filterStartDate = null;
     }
@@ -147,15 +151,23 @@ export class ScheduleComponent implements OnInit {
       schedule.filterCustomer = null;
     }
 
+    if (filterStartDate !== '' && filterEndDate !== '') {
+      filterStartDate = new Date(filterStartDate);
+      filterEndDate = new Date(filterEndDate);
+      filterStartDate = this.dateFormat(filterStartDate);
+      filterEndDate = this.dateFormat(filterEndDate);
+    } else {
+      filterStartDate = null;
+      filterEndDate = null;
+    }
     const fullAlertTime = new Date(alertDate + ' ' + alertTime);
+
     if (fullAlertTime > new Date()) {
       const zonId = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      console.log(filterStartDate);
-      console.log(filterEndDate);
       const newSchedule: Schedule = {
         email: schedule.email,
         subject: schedule.scheduleName,
-        customerId: schedule.filterCustomer.customerId,
+        customerId: this.selectedCustomer,
         startDate: filterStartDate,
         endDate: filterEndDate,
         status: schedule.filterStatus,
@@ -165,7 +177,6 @@ export class ScheduleComponent implements OnInit {
         zoneId: zonId,
         scheduleId: this.scheduleId
       };
-
       console.log(newSchedule);
       this.apiService.updateSchedule(newSchedule, this.scheduleId).subscribe((response) => {
         if (response === null) {
@@ -193,7 +204,6 @@ export class ScheduleComponent implements OnInit {
 
   setCustomer(event: MatAutocompleteSelectedEvent) {
     const customer = event.option.value.customerId;
-    console.log(customer);
     if (customer !== '') {
       this.selectedCustomer = customer;
     } else {
@@ -212,6 +222,20 @@ export class ScheduleComponent implements OnInit {
 
   get email() {
     return this.scheduleForm.get('email');
+  }
+
+  dateFormat(date): string {
+    return date.getFullYear()
+              + '-' + this.leftpad(date.getMonth() + 1, 2)
+              + '-' + this.leftpad(date.getDate(), 2)
+              + ' ' + this.leftpad(date.getHours(), 2)
+              + ':' + this.leftpad(date.getMinutes(), 2)
+              + ':' + this.leftpad(date.getSeconds(), 2);
+  }
+
+  leftpad(val, resultLength = 2, leftpadChar = '0'): string {
+    return (String(leftpadChar).repeat(resultLength)
+          + String(val)).slice(String(val).length);
   }
 
 }
