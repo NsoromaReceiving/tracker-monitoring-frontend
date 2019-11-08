@@ -8,10 +8,11 @@ stages:
 
 docker-build:
   # Official docker image.
-  image: docker:latest
   stage: build
-  services:
-    - docker:dind
+  
+  only:
+        - master
+
   before_script:
     - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
   script:
@@ -20,5 +21,3 @@ docker-build:
     - export IMAGET2=hawkmanlabs/tracker-monitoring-template:stable
     - docker build --pull -t IMAGET1 -t IMAGET2 .
     - docker push $IMAGE
-  except:
-    - master
