@@ -22,11 +22,11 @@ export class APIcallsService {
   params = new HttpParams();
 
 
-  trackersStateUrl = 'tracker-monitroing-nginx-proxy/api/trackers/';
-  trackerStateUrl = 'tracker-monitroing-nginx-proxy/api/tracker/';
-  schedulesUrl = 'tracker-monitroing-nginx-proxy/api/schedules';
-  scheduleUrl = 'tracker-monitroing-nginx-proxy/api/schedule/';
-  customersUrl = 'tracker-monitroing-nginx-proxy/api/customers';
+  trackersStateUrl = 'http://167.71.139.114/api/trackers/';
+  trackerStateUrl = 'http://167.71.139.114/api/tracker/';
+  schedulesUrl = 'http://167.71.139.114/api/schedules';
+  scheduleUrl = 'http://167.71.139.114/api/schedule/';
+  customersUrl = 'http://167.71.139.114/api/customers';
 
 
   constructor(private http: HttpClient) {
