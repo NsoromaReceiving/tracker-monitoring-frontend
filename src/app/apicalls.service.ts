@@ -22,11 +22,11 @@ export class APIcallsService {
   params = new HttpParams();
 
 
-  trackersStateUrl = 'http://api/trackers/';
-  trackerStateUrl = 'http://api/tracker/';
-  schedulesUrl = 'http://api/schedules';
-  scheduleUrl = 'http://api/schedule/';
-  customersUrl = 'http://api/customers';
+  trackersStateUrl = 'http://nsoroma-tracker-monitoring-service:1300/api/trackers/';
+  trackerStateUrl = 'http://nsoroma-tracker-monitoring-service:1300/api/tracker/';
+  schedulesUrl = 'http://nsoroma-tracker-monitoring-service:1300/api/schedules';
+  scheduleUrl = 'http://nsoroma-tracker-monitoring-service:1300/api/schedule/';
+  customersUrl = 'http://nsoroma-tracker-monitoring-service:1300/api/customers';
 
 
   constructor(private http: HttpClient) {
