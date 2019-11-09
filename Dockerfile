@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # base image
 FROM node:10.16.3
 
@@ -19,13 +18,3 @@ RUN npm install -g @angular/cli@7.3.9
 COPY . /app
 
 CMD ng serve --host 0.0.0.0 --port 4200 --disableHostCheck true
-=======
-FROM node:10-alpine AS node
-WORKDIR /app
-COPY . .
-RUN npm install
-RUN npm run build --prod
-
-FROM nginx:alpine
-COPY --from=node /app/dist/nsoromajsmNG usr/share/nginx/html
->>>>>>> ad6391868073eaa050953a314122f5c69a6bab62
