@@ -22,11 +22,11 @@ export class APIcallsService {
   params = new HttpParams();
 
 
-  trackersStateUrl = 'http://localhost/api/trackers/';
-  trackerStateUrl = 'http://localhost/api/tracker/';
-  schedulesUrl = 'http://localhost/api/schedules';
-  scheduleUrl = 'http://localhost/api/schedule/';
-  customersUrl = 'http://localhost/api/customers';
+  trackersStateUrl = 'http://api/trackers/';
+  trackerStateUrl = 'http://api/tracker/';
+  schedulesUrl = 'http://api/schedules';
+  scheduleUrl = 'http://api/schedule/';
+  customersUrl = 'http://api/customers';
 
 
   constructor(private http: HttpClient) {
