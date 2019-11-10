@@ -1,6 +1,5 @@
 
 
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
@@ -22,11 +21,11 @@ export class APIcallsService {
   params = new HttpParams();
 
 
-  trackersStateUrl = 'http://167.71.139.114/api/trackers/';
-  trackerStateUrl = 'http://167.71.139.114/api/tracker/';
-  schedulesUrl = 'http://167.71.139.114/api/schedules';
-  scheduleUrl = 'http://167.71.139.114/api/schedule/';
-  customersUrl = 'http://167.71.139.114/api/customers';
+  trackersStateUrl = 'http://localhost/api/trackers/';
+  trackerStateUrl = 'http://localhost/api/tracker/';
+  schedulesUrl = 'http://localhost/api/schedules';
+  scheduleUrl = 'http://localhost/api/schedule/';
+  customersUrl = 'http://localhost/api/customers';
 
 
   constructor(private http: HttpClient) {
