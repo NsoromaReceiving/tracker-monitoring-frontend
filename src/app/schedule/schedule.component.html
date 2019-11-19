@@ -146,7 +146,7 @@
 
                       <div class="col-lg-4" style="padding: 0px;">
                           <mat-form-field class="example-full-width col-lg-12" >
-                              <input formControlName="filterCustomer" [value]="customerName" matInput placeholder="Select Customer Trackers" (input)="customerTextChange($event.target.value)" aria-label="State" [matAutocomplete]="auto">
+                              <input formControlName="filterCustomer" matInput placeholder="Select Customer Trackers" (input)="customerTextChange($event.target.value)" aria-label="State" [matAutocomplete]="auto">
                               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="setCustomer($event)" [displayWith]="customerDisplayFunction">
                                   <mat-option *ngFor="let customer of searchedCustomers" [value]="customer">
                                   <span>{{ customer.customerName }}</span>
