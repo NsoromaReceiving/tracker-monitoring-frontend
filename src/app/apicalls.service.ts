@@ -20,11 +20,17 @@ export class APIcallsService {
   params = new HttpParams();
 
 
-  trackersStateUrl = 'api/trackers/';
+  /*trackersStateUrl = 'api/trackers/';
   trackerStateUrl = 'api/tracker/';
   schedulesUrl = 'api/schedules';
   scheduleUrl = 'api/schedule/';
-  customersUrl = 'api/customers';
+  customersUrl = 'api/customers';*/
+
+  trackersStateUrl = 'http://nsoromatrackers.hawkmanlabs.com/api/trackers/';
+  trackerStateUrl = 'http://nsoromatrackers.hawkmanlabs.com/api/tracker/';
+  schedulesUrl = 'http://nsoromatrackers.hawkmanlabs.com/api/schedules';
+  scheduleUrl = 'http://nsoromatrackers.hawkmanlabs.com/api/schedule/';
+  customersUrl = 'http://nsoromatrackers.hawkmanlabs.com/api/customers';
 
 
   constructor(private http: HttpClient) {
