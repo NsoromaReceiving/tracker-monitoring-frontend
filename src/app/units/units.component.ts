@@ -3,6 +3,7 @@ import { APIcallsService } from '../apicalls.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 declare var $: any;
 
@@ -43,13 +44,19 @@ export class UnitsComponent implements OnInit {
     $(document).ready(() => {
       $.getScript('../../assets/js/datepicker.js');
     });
-    // date element setting
+
+    /*// date element setting
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 1);
     this.startDate = `${startDate.getUTCMonth() + 1}/${startDate.getDate()}/${startDate.getFullYear()}`;
     const endDate = new Date();
     endDate.setDate(endDate.getDate());
     this.endDate = `${endDate.getUTCMonth() + 1}/${endDate.getDate()}/${endDate.getFullYear()}`;
+    */
+
+    // setting date to null
+    this.startDate = null;
+    this.endDate = null;
 
     // auto complete search angular material element
     this.customerCtrl = new FormControl();
@@ -91,13 +98,44 @@ export class UnitsComponent implements OnInit {
     if (status === 'All') {
       status =  null;
     }
-    console.log(startDate);
 
-    console.log(endDate);
-    startDate = new Date(startDate);
-    endDate = new Date(endDate);
-    startDate = this.dateFormat(startDate);
-    endDate = this.dateFormat(endDate);
+    // start date validation
+    if (startDate !== '' && startDate !== null) {
+      startDate = new Date(startDate);
+
+      if (startDate !== startDate instanceof Date && !isNaN(startDate)) {
+        startDate = this.dateFormat(startDate);
+      } else {
+        Swal.fire(
+          'Invalid Start Date',
+          'Please make sure to select a date from the date control or enter a valid date format',
+          'error'
+        );
+        return;
+      }
+    } else {
+      startDate = null;
+    }
+
+
+    // end date validation
+    if (endDate !== '' && endDate !== null) {
+      endDate = new Date(Date.parse(endDate));
+
+      if (endDate !== endDate instanceof Date && !isNaN(endDate)) {
+        endDate = this.dateFormat(endDate);
+      } else {
+        Swal.fire(
+          'Invalid End Date',
+          'Please make sure to select a date from the date control or enter a valid date format',
+          'error'
+        );
+        return;
+      }
+    } else {
+      endDate = null;
+    }
+
     console.log(startDate);
     console.log(endDate);
     console.log(type);
