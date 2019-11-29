@@ -11,8 +11,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
-import {MatStepperModule} from '@angular/material/stepper';
 
 import { CommonModule } from '@angular/common';
 import { AgmCoreModule } from '@agm/core';
@@ -42,8 +40,6 @@ import { ScheduleCreateComponent } from './schedule-create/schedule-create.compo
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatIconModule,
-    MatStepperModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDQTpXj82d8UpCi97wzo_nKXL7nYrd4G70'
     })
