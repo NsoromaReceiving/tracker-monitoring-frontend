@@ -34,8 +34,11 @@ export class APIcallsService {
   // get list of trackers
   getTrackers(startDate, endDate, customerId, type, status) {
     let queryParameters = '';
-    if (startDate && endDate) {
-      queryParameters += '?startDate=' + startDate + '&endDate=' + endDate;
+    if (startDate) {
+      queryParameters += '&startDate=' + startDate;
+    }
+    if (endDate) {
+      queryParameters += '&endDate=' + endDate;
     }
     if (customerId) {
       queryParameters += '&customerId=' + customerId;
