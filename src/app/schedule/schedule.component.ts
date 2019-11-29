@@ -19,6 +19,9 @@ interface Schedule {
   status;
   subject;
   scheduleId;
+  timeFrame;
+  endTimeFrame;
+  startTimeFrame;
 }
 
 interface Customer {
@@ -35,7 +38,7 @@ export class ScheduleComponent implements OnInit {
   scheduleId;
   schedule;
   scheduleForm;
-  alertFrequencies = [{ id: 'once',  name: 'Once'}, { id: 'daily', name : 'Daily'}];
+  alertFrequencies = [{ id: 'once',  name: 'Once'}, { id: 'everyday', name : 'Everyday'}];
   startDate;
   endDate;
   customerCtrl;
@@ -73,7 +76,10 @@ export class ScheduleComponent implements OnInit {
         filterEndDate: new FormControl(),
         filterStatus: new FormControl(),
         filterModel: new FormControl(),
-        filterCustomer: new FormControl()
+        filterCustomer: new FormControl(),
+        timeFrameCtrl: new FormControl(),
+      startTimeFrameCtrl: new FormControl(),
+      endTimeFrameCtrl: new FormControl()
       });
       this.scheduleForm.disable();
       this.disableBtn = true;
@@ -82,6 +88,7 @@ export class ScheduleComponent implements OnInit {
       console.log(this.scheduleId);
       this.apiService.getSchedule(this.scheduleId).subscribe((schedule) => {
         this.schedule = schedule;
+        console.log(schedule);
         // get customers
         this.apiService.getCustomers().subscribe((customers: any) => {
           this.customers = customers;
@@ -104,6 +111,8 @@ export class ScheduleComponent implements OnInit {
         this.scheduleForm.controls.fileFormat.setValue('Excell Sheet');
         this.scheduleForm.controls.alertStartDate.setValue(date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear() );
         this.scheduleForm.controls.alertStartTime.setValue(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds());
+
+
         if (this.schedule.trackerType === null) {
           this.schedule.trackerType = 'All';
         }
@@ -113,18 +122,25 @@ export class ScheduleComponent implements OnInit {
         this.scheduleForm.controls.alertFrequency.setValue(this.schedule.alertFrequency);
         this.scheduleForm.controls.filterStatus.setValue(this.schedule.status);
         this.scheduleForm.controls.filterModel.setValue(this.schedule.trackerType);
+        this.scheduleForm.controls.timeFrameCtrl.setValue(Number(this.schedule.timeFrame));
+        this.scheduleForm.controls.startTimeFrameCtrl.setValue(Number(this.schedule.startTimeFrame));
+        this.scheduleForm.controls.endTimeFrameCtrl.setValue(Number(this.schedule.endTimeFrame));
 
-        if (this.schedule.startDate === null || this.schedule.endDate === null) {
-          this.schedule.startDate = 'none';
-          this.schedule.endDate = 'none';
+        if (this.schedule.startDate !== null) {
+          const startDate = new Date(this.schedule.startDate);
+          this.scheduleForm.controls.filterStartDate.setValue(startDate.getMonth() +
+            1 + '/' + startDate.getDate() + '/' + date.getFullYear());
+        } else {
+          this.startDate = '';
         }
-        const startDate = new Date(this.schedule.startDate);
-        const endDate = new Date(this.schedule.endDate);
-        this.scheduleForm.controls.filterStartDate.setValue(startDate.getMonth() +
-        1 + '/' + startDate.getDate() + '/' + date.getFullYear());
-        this.scheduleForm.controls.filterEndDate.setValue(endDate.getMonth() + 1 + '/' + endDate.getDate() + '/' + endDate.getFullYear());
 
-        // this.scheduleForm.disable();
+        if ( this.schedule.endDate !== null) {
+          const endDate = new Date(this.schedule.endDate);
+          this.scheduleForm.controls.filterEndDate.setValue(endDate.getMonth() + 1 +
+            '/' + endDate.getDate() + '/' + endDate.getFullYear());
+        } else {
+          this.endDate = '';
+        }
     });
     });
   }
@@ -135,10 +151,6 @@ export class ScheduleComponent implements OnInit {
   }
 
   onSubmit(schedule, alertDate, filterStartDate, filterEndDate, alertTime) {
-    if (schedule.filterStartDate === '' || schedule.filterEndDate === '') {
-      schedule.filterEndDate = null;
-      schedule.filterStartDate = null;
-    }
 
     if (schedule.filterStatus === 'All') {
       schedule.filterStatus = null;
@@ -151,15 +163,56 @@ export class ScheduleComponent implements OnInit {
       schedule.filterCustomer = null;
     }
 
-    if (filterStartDate !== '' && filterEndDate !== '') {
+
+    // start date
+    if (filterStartDate !== '' && filterStartDate !== null) {
       filterStartDate = new Date(filterStartDate);
-      filterEndDate = new Date(filterEndDate);
-      filterStartDate = this.dateFormat(filterStartDate);
-      filterEndDate = this.dateFormat(filterEndDate);
+
+      if (filterStartDate !== filterStartDate instanceof Date && !isNaN(filterStartDate)) {
+        filterStartDate = this.dateFormat(filterStartDate);
+      } else {
+        Swal.fire(
+          'Invalid Start Date',
+          'Please make sure to select a date from the date control or enter a valid date format',
+          'error'
+        );
+        return;
+      }
     } else {
       filterStartDate = null;
+    }
+
+    // end date
+    if (filterEndDate !== '' && filterEndDate !== null) {
+      filterEndDate = new Date(filterEndDate);
+
+      if (filterEndDate !== filterEndDate instanceof Date && !isNaN(filterEndDate)) {
+        filterEndDate = this.dateFormat(filterEndDate);
+      } else {
+        Swal.fire(
+          'Invalid End Date',
+          'Please make sure to select a date from the date control or enter a valid date format',
+          'error'
+        );
+        return;
+      }
+    } else {
       filterEndDate = null;
     }
+
+    if (schedule.timeFrameCtrl < 1 || schedule.timeFrameCtrl === undefined) {
+      schedule.timeFrameCtrl = null;
+    }
+
+    if (schedule.startTimeFrameCtrl < 1 || schedule.startTimeFrameCtrl === undefined) {
+      schedule.startTimeFrameCtrl = null;
+    }
+
+    if (schedule.endTimeFrameCtrl < 1 || schedule.endTimeFrameCtrl === undefined) {
+      schedule.endTimeFrameCtrl = null;
+    }
+
+
     const fullAlertTime = new Date(alertDate + ' ' + alertTime);
 
     if (fullAlertTime > new Date()) {
@@ -175,7 +228,10 @@ export class ScheduleComponent implements OnInit {
         alertTime: fullAlertTime.toISOString(),
         alertFrequency: schedule.alertFrequency,
         zoneId: zonId,
-        scheduleId: this.scheduleId
+        scheduleId: this.scheduleId,
+        timeFrame: schedule.timeFrameCtrl,
+        endTimeFrame: schedule.endTimeFrameCtrl,
+        startTimeFrame: schedule.startTimeFrameCtrl
       };
       console.log(newSchedule);
       this.apiService.updateSchedule(newSchedule, this.scheduleId).subscribe((response) => {
