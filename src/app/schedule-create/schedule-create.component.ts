@@ -18,6 +18,9 @@ interface Schedule {
   zoneId;
   status;
   subject;
+  timeFrame;
+  endTimeFrame;
+  startTimeFrame;
 }
 
 interface Customer {
@@ -36,7 +39,7 @@ export class ScheduleCreateComponent implements OnInit {
   scheduleId;
   schedule;
   scheduleForm;
-  alertFrequencies = [{ id: 'once',  name: 'Once'}, { id: 'daily', name : 'Daily'}];
+  alertFrequencies = [{ id: 'once',  name: 'Once'}, { id: 'everyday', name : 'Everyday'}];
   startDate;
   endDate;
   customerCtrl;
@@ -58,40 +61,43 @@ export class ScheduleCreateComponent implements OnInit {
 
   ngOnInit() {
     $(document).ready(() => {
-      this.apiService.getSchedules().subscribe((schedules: any) => {
-        $.getScript('../../assets/js/datepicker.js');
-      });
+      $.getScript('../../assets/js/datepicker.js');
     });
-    this.activatedRoute.params.subscribe((scheduleid) => {
 
-      const startDate = new Date();
-      startDate.setDate(startDate.getDate() + 1);
-      this.startDate = `${startDate.getUTCMonth() + 1}/${startDate.getDate()}/${startDate.getFullYear()}`;
 
-      this.customerCtrl = new FormControl();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() + 1);
+    this.startDate = `${startDate.getUTCMonth() + 1}/${startDate.getDate()}/${startDate.getFullYear()}`;
 
-      this.scheduleForm = new FormGroup({
-        scheduleName: new FormControl(null, [Validators.required, Validators.minLength(5)]),
-        email: new FormControl(null, [Validators.required, Validators.email]),
-        fileFormat: new FormControl(),
-        alertStartDate: new FormControl(),
-        alertStartTime: new FormControl(),
-        alertFrequency: new FormControl(),
-        filterStartDate: new FormControl(),
-        filterEndDate: new FormControl(),
-        filterStatus: new FormControl(),
-        filterModel: new FormControl(),
-        filterCustomer: new FormControl()
-      });
+    this.customerCtrl = new FormControl();
 
-      const date = new Date();
-      this.scheduleForm.controls.fileFormat.setValue('Excell Sheet');
-      this.scheduleForm.controls.alertFrequency.setValue('once');
-      this.scheduleForm.controls.filterStatus.setValue('All');
-      this.scheduleForm.controls.filterModel.setValue('All');
-      this.scheduleForm.controls.alertStartTime.setValue(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds());
-      this.scheduleForm.controls.filterCustomer.setValue();
+    this.scheduleForm = new FormGroup({
+      scheduleName: new FormControl(null, [Validators.required, Validators.minLength(5)]),
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      fileFormat: new FormControl(),
+      alertStartDate: new FormControl(),
+      alertStartTime: new FormControl(),
+      alertFrequency: new FormControl(),
+      filterStartDate: new FormControl(),
+      filterEndDate: new FormControl(),
+      filterStatus: new FormControl(),
+      filterModel: new FormControl(),
+      filterCustomer: new FormControl(),
+      timeFrameCtrl: new FormControl(),
+      startTimeFrameCtrl: new FormControl(),
+      endTimeFrameCtrl: new FormControl()
     });
+
+    const date = new Date();
+    this.scheduleForm.controls.fileFormat.setValue('Excell Sheet');
+    this.scheduleForm.controls.alertFrequency.setValue('once');
+    this.scheduleForm.controls.filterStatus.setValue('All');
+    this.scheduleForm.controls.filterModel.setValue('All');
+    this.scheduleForm.controls.alertStartTime.setValue(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds());
+    this.scheduleForm.controls.filterCustomer.setValue();
+    this.scheduleForm.controls.timeFrameCtrl.setValue(0);
+    this.scheduleForm.controls.startTimeFrameCtrl.setValue(0);
+    this.scheduleForm.controls.endTimeFrameCtrl.setValue(0);
 
 
     this.apiService.getCustomers().subscribe((customers: any) => {
@@ -101,16 +107,48 @@ export class ScheduleCreateComponent implements OnInit {
   }
 
   onSubmit(schedule, alertDate, filterStartDate, filterEndDate, alertTime) {
-    filterStartDate = new Date(filterStartDate);
-    filterEndDate = new Date(filterEndDate);
-    filterStartDate = this.dateFormat(filterStartDate);
-    filterEndDate = this.dateFormat(filterEndDate);
+
+    // filter start date
+    if (filterStartDate !== '' && filterStartDate !== null) {
+      filterStartDate = new Date(filterStartDate);
+
+      if (filterStartDate !== filterStartDate instanceof Date && !isNaN(filterStartDate)) {
+        filterStartDate = this.dateFormat(filterStartDate);
+      } else {
+        Swal.fire(
+          'Invalid Start Date',
+          'Please make sure to select a date from the date control or enter a valid date format',
+          'error'
+        );
+        return;
+      }
+    } else {
+      filterStartDate = null;
+    }
+
+
+    // filter end date
+    if (filterEndDate !== '' && filterEndDate !== null) {
+      filterEndDate = new Date(filterEndDate);
+
+      if (filterEndDate !== filterEndDate instanceof Date && !isNaN(filterEndDate)) {
+        filterEndDate = this.dateFormat(filterEndDate);
+      } else {
+        Swal.fire(
+          'Invalid End Date',
+          'Please make sure to select a date from the date control or enter a valid date format',
+          'error'
+        );
+        return;
+      }
+    } else {
+      filterEndDate = null;
+    }
+
+
     console.log(filterStartDate);
     console.log(filterEndDate);
-    if (schedule.filterStartDate === 'none' || schedule.filterEndDate === 'none') {
-      schedule.filterEndDate = null;
-      schedule.filterStartDate = null;
-    }
+
 
     if (schedule.filterStatus === 'All') {
       schedule.filterStatus = null;
@@ -118,6 +156,18 @@ export class ScheduleCreateComponent implements OnInit {
 
     if (schedule.filterModel === 'All') {
       schedule.filterModel = null;
+    }
+
+    if (schedule.timeFrameCtrl < 1 || schedule.timeFrameCtrl === undefined) {
+      schedule.timeFrameCtrl = null;
+    }
+
+    if (schedule.startTimeFrameCtrl < 1 || schedule.startTimeFrameCtrl === undefined) {
+      schedule.startTimeFrameCtrl = null;
+    }
+
+    if (schedule.endTimeFrameCtrl < 1 || schedule.endTimeFrameCtrl === undefined) {
+      schedule.endTimeFrameCtrl = null;
     }
 
     const fullAlertTime = new Date(alertDate + ' ' + alertTime);
@@ -134,7 +184,10 @@ export class ScheduleCreateComponent implements OnInit {
         trackerType: schedule.filterModel,
         alertTime: fullAlertTime.toISOString(),
         alertFrequency: schedule.alertFrequency,
-        zoneId: zonId
+        zoneId: zonId,
+        timeFrame: schedule.timeFrameCtrl,
+        startTimeFrame: schedule.startTimeFrameCtrl,
+        endTimeFrame: schedule.endTimeFrameCtrl
       };
 
       console.log(newSchedule);
