@@ -19,6 +19,7 @@ import { UnitComponent } from './unit/unit.component';
 import { SchedulesComponent } from './schedules/schedules.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { ScheduleCreateComponent } from './schedule-create/schedule-create.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ScheduleCreateComponent } from './schedule-create/schedule-create.compo
     UnitComponent,
     SchedulesComponent,
     ScheduleComponent,
-    ScheduleCreateComponent
+    ScheduleCreateComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
