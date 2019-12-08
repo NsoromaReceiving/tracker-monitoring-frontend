@@ -28,6 +28,7 @@ export class APIcallsService {
   customersUrl = 'api/customers';
   loginUrl = 'security/login';
   tokenExpireUrl = 'security/expire?&token=';
+  validateTokenUrl = 'security/validate/';
 
 
   constructor(private http: HttpClient, private cookies: CookieService) {
@@ -89,6 +90,10 @@ export class APIcallsService {
 
   expireToken() {
     return this.http.get(this.tokenExpireUrl + this.cookies.get('token'));
+  }
+
+  validateToken() {
+    return this.http.get(this.validateTokenUrl);
   }
 
 }
