@@ -55,6 +55,8 @@ export class UnitComponent implements OnInit {
         const date = new Date();
         this.timeStamp = date.toUTCString();
         this.agmMap.panTo({lat: Number(this.latitude), lng: Number(this.longitude)});
+      }, (error) => {
+        this.router.navigate(['login']);
       });
     });
   }

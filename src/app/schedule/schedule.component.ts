@@ -141,6 +141,8 @@ export class ScheduleComponent implements OnInit {
         } else {
           this.endDate = '';
         }
+    }, (error) => {
+      this.router.navigate(['login']);
     });
     });
   }
@@ -238,6 +240,8 @@ export class ScheduleComponent implements OnInit {
         if (response === null) {
           Swal.fire('Great', 'Schedule Updated!', 'success');
         }
+      }, (error) => {
+        this.router.navigate(['login']);
       });
     } else {
       Swal.fire('Sorry could not update schedule !',

@@ -103,6 +103,8 @@ export class ScheduleCreateComponent implements OnInit {
     this.apiService.getCustomers().subscribe((customers: any) => {
       this.customers = customers;
       this.searchedCustomers = customers;
+    }, (error) => {
+      this.router.navigate(['login']);
     });
   }
 
@@ -196,6 +198,8 @@ export class ScheduleCreateComponent implements OnInit {
           Swal.fire('Great', 'Schedule Created!', 'success');
           this.scheduleForm.reset();
         }
+      }, (error) => {
+        this.router.navigate(['login']);
       });
     } else {
       Swal.fire('Sorry could not create "' + schedule.scheduleName + '" schedule !',

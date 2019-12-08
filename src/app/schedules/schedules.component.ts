@@ -19,16 +19,19 @@ export class SchedulesComponent implements OnInit {
       this.apiService.getSchedules().subscribe((schedules: any) => {
         this.schedules = schedules;
         $.getScript('../../assets/js/loadfootable.js');
+      },
+      (error) => {
+        this.router.navigate(['login']);
       });
     });
   }
 
   scheduleNavigate(scheduleId) {
-    this.router.navigate(['schedule', scheduleId]);
+    this.router.navigate(['tracker/schedule', scheduleId]);
   }
 
   scheduleCreateNavigate() {
-    this.router.navigate(['scheduleCreate']);
+    this.router.navigate(['tracker/scheduleCreate']);
   }
 
   confirmDelete(scheduleId) {

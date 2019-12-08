@@ -76,11 +76,15 @@ export class UnitsComponent implements OnInit {
 
       // get customers
 
+    }, (error) => {
+      this.router.navigate(['login']);
     });
 
     this.apiService.getCustomers().subscribe((customers: any) => {
       this.customers = customers;
       this.searchedCustomers = customers;
+    }, (error) => {
+      this.router.navigate(['login']);
     });
 
   }
@@ -151,11 +155,13 @@ export class UnitsComponent implements OnInit {
     this.idleTrackers = this.trackerStates.filter((trackerState) => trackerState.connectionStatus === 'idle').length;
     this.justRegisteredTrackers = this.trackerStates.filter((trackerState) =>
     trackerState.connectionStatus === 'just_registered').length;
+    }, (error) => {
+      this.router.navigate(['login']);
     });
   }
 
   trackerStateNavigate(trackerId) {
-    this.router.navigate(['unit', trackerId]);
+    this.router.navigate(['tracker/unit', trackerId]);
   }
 
   customerTextChange(searchtxt) {
