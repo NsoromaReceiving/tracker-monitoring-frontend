@@ -8,6 +8,7 @@ import { ScheduleCreateComponent } from './schedule-create/schedule-create.compo
 import { LoginComponent } from './login/login.component';
 import { MainAppComponent } from './main-app/main-app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AuthGuardService } from './guards/auth-guard.service';
 
 
 const routes: Routes = [
@@ -17,7 +18,7 @@ const routes: Routes = [
     {path: 'schedules', component: SchedulesComponent},
     {path: 'schedule/:scheduleid', component: ScheduleComponent},
     {path: 'scheduleCreate', component: ScheduleCreateComponent},
-  ]},
+  ], canActivate: [AuthGuardService]},
   {path: '', redirectTo: '/tracker/units', pathMatch: 'full'},
   {path: 'index', redirectTo: 'tracker/units', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
