@@ -6,17 +6,22 @@ import { SchedulesComponent } from './schedules/schedules.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { ScheduleCreateComponent } from './schedule-create/schedule-create.component';
 import { LoginComponent } from './login/login.component';
+import { MainAppComponent } from './main-app/main-app.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 const routes: Routes = [
-  {path: '', redirectTo: '/units', pathMatch: 'full'},
-  {path: 'index', redirectTo: '/units', pathMatch: 'full'},
-  {path: 'units', component: UnitsComponent},
+  {path: 'tracker', component: MainAppComponent, children: [
+    {path: 'units', component: UnitsComponent},
+    {path: 'unit/:trackerid', component: UnitComponent},
+    {path: 'schedules', component: SchedulesComponent},
+    {path: 'schedule/:scheduleid', component: ScheduleComponent},
+    {path: 'scheduleCreate', component: ScheduleCreateComponent},
+  ]},
+  {path: '', redirectTo: '/tracker/units', pathMatch: 'full'},
+  {path: 'index', redirectTo: 'tracker/units', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
-  {path: 'unit/:trackerid', component: UnitComponent},
-  {path: 'schedules', component: SchedulesComponent},
-  {path: 'schedule/:scheduleid', component: ScheduleComponent},
-  {path: 'scheduleCreate', component: ScheduleCreateComponent}
+  {path: '**', component: PageNotFoundComponent}
 ];
 
 @NgModule({
