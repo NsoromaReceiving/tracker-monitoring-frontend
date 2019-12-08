@@ -1,3 +1,53 @@
-<p>
-  login works!
-</p>
+<body class="gray-bg">
+
+  <div class="loginColumns animated fadeInDown">
+      <div class="row">
+        <div class="col-md-12 m-b">
+            <img alt="logo" src="assets/logo.png" />
+        </div>
+          <div class="col-md-6">
+              <h2>Welcome To The Nsoroma GPS Tracker Monitoring Platform</h2>
+            <ul class="m-t" style="list-style-type: square; list-style-position: inside; padding: 0%;">
+              <li class="m-t">
+                  <span class="text-muted">View All Trackers Last States</span>
+              </li>
+
+              <li class="m-t">
+                  <span class="text-muted">Schedules And Get Daily Mails</span>
+              </li>
+
+              <li class="m-t">
+                  <span class="text-muted">Filter For Trackers By Customers, Type And Status</span>
+              </li>
+            </ul>
+
+          </div>
+          <div class="col-md-6">
+              <div class="ibox-content">
+                  <form class="m-t" role="form" [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+                        <h5 *ngIf="invalidLogin" class="text-danger text-right">
+                                Invalid user or password!
+                              </h5>
+                      <div class="form-group">
+                          <input formControlName="user" type="email" class="form-control" placeholder="Username" required="">
+                        </div>
+                      <div class="form-group">
+                          <input formControlName="password" type="password" class="form-control" placeholder="Password" required="">
+                        </div>
+                      <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+                  </form>
+                  <p class="m-t">
+                      <small>Nsoroma GPS Systems &copy; 2019</small>
+                  </p>
+              </div>
+          </div>
+      </div>
+      <hr/>
+      <div class="row">
+          <div class="col-md-12 text-left">
+              <small>NsoromaGPS</small>
+          </div>
+      </div>
+  </div>
+
+</body>
