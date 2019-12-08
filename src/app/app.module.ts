@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
@@ -20,6 +20,11 @@ import { SchedulesComponent } from './schedules/schedules.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { ScheduleCreateComponent } from './schedule-create/schedule-create.component';
 import { LoginComponent } from './login/login.component';
+import { MainAppComponent } from './main-app/main-app.component';
+import { CookieService } from 'ngx-cookie-service';
+import { ApHttpInterceptorService } from './ap-http-interceptor.service';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ServerErrorComponent } from './server-error/server-error.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +34,10 @@ import { LoginComponent } from './login/login.component';
     SchedulesComponent,
     ScheduleComponent,
     ScheduleCreateComponent,
-    LoginComponent
+    LoginComponent,
+    MainAppComponent,
+    PageNotFoundComponent,
+    ServerErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +54,12 @@ import { LoginComponent } from './login/login.component';
       apiKey: 'AIzaSyDQTpXj82d8UpCi97wzo_nKXL7nYrd4G70'
     })
   ],
-  providers: [],
+  providers: [CookieService,
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: ApHttpInterceptorService,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
