@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +26,11 @@ export class APIcallsService {
   schedulesUrl = 'api/schedules';
   scheduleUrl = 'api/schedule/';
   customersUrl = 'api/customers';
+  loginUrl = 'security/login';
+  tokenExpireUrl = 'security/expire?&token=';
 
 
-  constructor(private http: HttpClient) {
-    this.headers = this.headers.set('Access-Control-Allow-Origin', '*');
+  constructor(private http: HttpClient, private cookies: CookieService) {
   }
 
   // get list of trackers
@@ -79,6 +81,14 @@ export class APIcallsService {
 
   getCustomers() {
     return this.http.get(this.customersUrl, this.httpOptions);
+  }
+
+  login(user) {
+    return this.http.post(this.loginUrl, user);
+  }
+
+  expireToken() {
+    return this.http.get(this.tokenExpireUrl + this.cookies.get('token'));
   }
 
 }
