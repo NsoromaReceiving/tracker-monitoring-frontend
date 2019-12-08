@@ -25,6 +25,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ApHttpInterceptorService } from './ap-http-interceptor.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ServerErrorComponent } from './server-error/server-error.component';
+import { AuthGuardService } from './guards/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,7 @@ import { ServerErrorComponent } from './server-error/server-error.component';
     provide: HTTP_INTERCEPTORS,
     useClass: ApHttpInterceptorService,
     multi: true
-  }],
+  }, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
