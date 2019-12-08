@@ -16,16 +16,5 @@ export class AppComponent implements OnInit {
 
    ngOnInit() {  }
 
-  customerNavigate(customerName, externalCustomerCode) {
-    this.router.navigate(['customer', customerName, externalCustomerCode]);
-  }
 
-  unitsNavigate() {
-    this.router.navigate(['units']);
-  }
-
-  schedulesNavigate() {
-    this.router.navigate(['schedules']);
-  }
-  
 }
