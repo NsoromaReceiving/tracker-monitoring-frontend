@@ -1,17 +1,29 @@
-image: docker:19.03.0
-    
-services:
-    - docker:19.03.0-dind
 
+    
 stages:
+    - sonarqube
     - build
+    
+sonarqube-check:
+
+  stage: sonarqube
+  
+  image: sonarsource/sonar-scanner-cli:latest
+    
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=n-t-m-t -Dsonar.host.url=http://165.22.120.243:9000 -Dsonar.login=6fe927cb875c24260c41660607b8209bc40e1c94
 
 docker-build:
-  # Official docker image.
+
   stage: build
   
+  image: docker:19.03.0
+  entrypoint: ["/src"]
+  services:
+    - docker:19.03.0-dind
+  
   only:
-        - master
+    - master
 
   before_script:
     - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
