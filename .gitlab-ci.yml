@@ -1,4 +1,3 @@
-
     
 stages:
     - sonarqube
@@ -18,7 +17,7 @@ docker-build:
   stage: build
   
   image: docker:19.03.0
-  entrypoint: ["/src"]
+  
   services:
     - docker:19.03.0-dind
   
