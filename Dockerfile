@@ -16,4 +16,4 @@ RUN npm install -g @angular/cli@8.3.21
 
 COPY . /app
 
-CMD ng serve --port 4200 --host 0.0.0.0 --disableHostCheck true
+CMD ng serve --prod --port 4200 --host 0.0.0.0 --disableHostCheck true
