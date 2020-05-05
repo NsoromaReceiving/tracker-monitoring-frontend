@@ -1,5 +1,5 @@
 # base image
-FROM node:10.16.3
+FROM node:10.16.3 as build
 
 # install chrome for protractor tests
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
@@ -14,8 +14,15 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 RUN npm install
 RUN npm install -g @angular/cli@7.3.9
-RUN npm update
 
 COPY . /app
 
-CMD ng serve --prod --host 0.0.0.0 --port 4200 --disableHostCheck true
+RUN ng build --output-path=dist
+
+FROM nginx:1.16.0-alpine
+
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 4200
+
+CMD [ "nginx", "-g", "daemon off" ]
