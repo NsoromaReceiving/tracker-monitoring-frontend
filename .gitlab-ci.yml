@@ -1,16 +1,6 @@
     
 stages:
-    - sonarqube
     - build
-    
-sonarqube-check:
-
-  stage: sonarqube
-  
-  image: sonarsource/sonar-scanner-cli:latest
-    
-  script:
-    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=n-t-m-t -Dsonar.host.url=http://165.22.120.243:9000 -Dsonar.login=6fe927cb875c24260c41660607b8209bc40e1c94
 
 docker-build:
 
@@ -29,6 +19,6 @@ docker-build:
   script:
     - export IMAGE=hawkmanlabs/tracker-monitoring-template
     - export IMAGET1=hawkmanlabs/tracker-monitoring-template:$CI_COMMIT_REF_SLUG
-    - export IMAGET2=hawkmanlabs/tracker-monitoring-template:stable
+    - export IMAGET2=hawkmanlabs/tracker-monitoring-template:prod
     - docker build --pull -t $IMAGET1 -t $IMAGET2 .
     - docker push $IMAGE
