@@ -20,7 +20,46 @@
                         <button class="btn btn-white btn-sm m-l" data-toggle="tooltip" data-placement="left" title="Refresh Schedules" (click)="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
                     </div>
                 </div>
-                <div class="ibox-content">
+
+                <div class="mat-elevation-z8">
+                    <table mat-table [dataSource]="dataSource">
+                  
+                      <!-- Position Column -->
+                      <ng-container matColumnDef="SUBJECT">
+                        <th mat-header-cell *matHeaderCellDef> SUBJECT </th>
+                        <td mat-cell *matCellDef="let element"> {{element.subject}} </td>
+                      </ng-container>
+                  
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="EMAIL">
+                        <th mat-header-cell *matHeaderCellDef> EMAIL </th>
+                        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="ALERT TIME">
+                        <th mat-header-cell *matHeaderCellDef> ALERT TIME </th>
+                        <td mat-cell *matCellDef="let element"> {{element.alertTime}} </td>
+                      </ng-container>
+
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="ACTION">
+                        <th mat-header-cell *matHeaderCellDef> ACTION </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="btn-group">
+                                <button class="btn-white btn btn-xs m-r" (click)="scheduleNavigate(element.scheduleId)"><i class="fa fa-folder"></i> View</button>
+                                <button class="btn-white btn btn-xs" (click)="confirmDelete(element.scheduleId)"><i class="fa fa-trash"></i> Delete</button>
+                            </div>
+                        </td>
+                      </ng-container>
+                  
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                  
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                  </div>
+                <!--div class="ibox-content">
 
                     <table class="footable table toggle-arrow-tiny" data-page-size="15">
                         <thead>
@@ -54,7 +93,7 @@
                         </tfoot>
                     </table>
 
-                </div>
+                </div-->
             </div>
         </div>
     </div>

@@ -19,7 +19,7 @@ export class AuthGuardService implements CanActivate {
         if (e) {
           return true;
         } else {
-          this.router.navigate(['login']);
+          this.router.navigate(['error']);
           return false;
         }
       }),
@@ -27,7 +27,7 @@ export class AuthGuardService implements CanActivate {
         if (err.status === 200) {
           return of(true);
         }
-        this.router.navigate(['login']);
+        this.router.navigate(['error']);
         return of(false);
       })
     );

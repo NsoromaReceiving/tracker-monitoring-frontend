@@ -35,7 +35,7 @@ export class APIcallsService {
   }
 
   // get list of trackers
-  getTrackers(startDate, endDate, customerId, type, status) {
+  getTrackers(startDate, endDate, customerId, type, status, server) {
     let queryParameters = '?';
     if (startDate) {
       queryParameters += '&startDate=' + startDate;
@@ -51,6 +51,9 @@ export class APIcallsService {
     }
     if (status != null) {
       queryParameters += '&status=' + status;
+    }
+    if (server != null) {
+      queryParameters += '&server=' + server;
     }
     return this.http.get(this.trackersStateUrl + queryParameters);
   }
@@ -69,6 +72,7 @@ export class APIcallsService {
   }
 
   createSchedule(schedule) {
+    console.log(schedule)
     return this.http.post(this.schedulesUrl, schedule);
   }
 

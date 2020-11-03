@@ -26,6 +26,8 @@ import { ApHttpInterceptorService } from './ap-http-interceptor.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ServerErrorComponent } from './server-error/server-error.component';
 import { AuthGuardService } from './guards/auth-guard.service';
+import { MatPaginatorModule, MatTableModule } from '@angular/material';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { AuthGuardService } from './guards/auth-guard.service';
     LoginComponent,
     MainAppComponent,
     PageNotFoundComponent,
-    ServerErrorComponent
+    ServerErrorComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +54,8 @@ import { AuthGuardService } from './guards/auth-guard.service';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+    MatPaginatorModule,
+    MatTableModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDQTpXj82d8UpCi97wzo_nKXL7nYrd4G70'
     })

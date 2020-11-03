@@ -21,6 +21,8 @@ interface Schedule {
   timeFrame;
   endTimeFrame;
   startTimeFrame;
+  scheduleType;
+  server;
 }
 
 interface Customer {
@@ -47,14 +49,11 @@ export class ScheduleCreateComponent implements OnInit {
   searchedCustomers: Array<Customer>;
   selectedCustomer = null;
 
-  trackerTypes = ['All', 'bcefm_light', 'bce_fms500_light_vt', 'qlgv300_n', 'concoxgt06n_gt80', 'bce_fms500_light', 'bce_fms500_one',
-   'qlgv300_n_vt', 'qlgv55', 'qlgv65', 'telfmb640', 'telfmb120', 'telfma120_fw0119_vt', 'navixymobile_xgps', 'concoxgt100', 'qlgv65_vt',
-   'concox_at4', 'qlgv55_vt', 'concoxgt100_vt', 'telfma120_fw0119', 'bce_fms500_stcan_vt', 'qlgmt200_vt', 'concox_x1', 'telfmb630', 'box',
-   'qlgv320', 'qlgv300', 'qlgv65_n', 'telfmb120_vt_b120', 'qlgv320_vt', 'qlgl500_vt', 'box2_vt', 'mobile_unknown_xgps', 'concox_at2',
-   'qlgl500_qlgl505', 'box2', 'qlgv55lite', 'concox_wetrack2', 'iosnavixytracker_xgps', 'qlgv500', 'box_vt', 'bce_fms500_stcan',
-   'concox_x3', 'telfmb001', 'jimi_jc100'];
+  servers = ['All', 'server_one', 'server_two'];
 
-   trackerStatus = ['All', 'active', 'offline', 'signal_lost', 'idle', 'just_registered'];
+  trackerStatus = ['All', 'active', 'offline', 'signal_lost', 'idle', 'just_registered'];
+
+  scheduleType = ["INHOUSE", "CLIENT"]
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
               private apiService: APIcallsService, private formBuilder: FormBuilder) { }
@@ -81,30 +80,32 @@ export class ScheduleCreateComponent implements OnInit {
       filterStartDate: new FormControl(),
       filterEndDate: new FormControl(),
       filterStatus: new FormControl(),
-      filterModel: new FormControl(),
+      filterServer: new FormControl(),
       filterCustomer: new FormControl(),
       timeFrameCtrl: new FormControl(),
       startTimeFrameCtrl: new FormControl(),
-      endTimeFrameCtrl: new FormControl()
+      endTimeFrameCtrl: new FormControl(),
+      filterScheduleType: new FormControl(),
     });
 
     const date = new Date();
     this.scheduleForm.controls.fileFormat.setValue('Excell Sheet');
     this.scheduleForm.controls.alertFrequency.setValue('once');
     this.scheduleForm.controls.filterStatus.setValue('All');
-    this.scheduleForm.controls.filterModel.setValue('All');
+    this.scheduleForm.controls.filterServer.setValue('All');
     this.scheduleForm.controls.alertStartTime.setValue(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds());
     this.scheduleForm.controls.filterCustomer.setValue();
     this.scheduleForm.controls.timeFrameCtrl.setValue(0);
     this.scheduleForm.controls.startTimeFrameCtrl.setValue(0);
     this.scheduleForm.controls.endTimeFrameCtrl.setValue(0);
+    this.scheduleForm.controls.filterScheduleType.setValue("INHOUSE");
 
 
     this.apiService.getCustomers().subscribe((customers: any) => {
       this.customers = customers;
       this.searchedCustomers = customers;
     }, (error) => {
-      this.router.navigate(['login']);
+      this.router.navigate(['error']);
     });
   }
 
@@ -156,8 +157,12 @@ export class ScheduleCreateComponent implements OnInit {
       schedule.filterStatus = null;
     }
 
-    if (schedule.filterModel === 'All') {
-      schedule.filterModel = null;
+    if (schedule.filterServer === 'All') {
+      schedule.filterServer = null;
+    } else if(schedule.filterServer === 'server_one') {
+      schedule.filterServer = '1';
+    } else {
+      schedule.filterServer = '2';
     }
 
     if (schedule.timeFrameCtrl < 1 || schedule.timeFrameCtrl === undefined) {
@@ -183,13 +188,15 @@ export class ScheduleCreateComponent implements OnInit {
         startDate: filterStartDate,
         endDate: filterEndDate,
         status: schedule.filterStatus,
-        trackerType: schedule.filterModel,
+        trackerType: null,
         alertTime: fullAlertTime.toISOString(),
         alertFrequency: schedule.alertFrequency,
         zoneId: zonId,
         timeFrame: schedule.timeFrameCtrl,
         startTimeFrame: schedule.startTimeFrameCtrl,
-        endTimeFrame: schedule.endTimeFrameCtrl
+        endTimeFrame: schedule.endTimeFrameCtrl,
+        scheduleType: schedule.filterScheduleType,
+        server: schedule.filterServer
       };
 
       console.log(newSchedule);
@@ -199,7 +206,7 @@ export class ScheduleCreateComponent implements OnInit {
           this.scheduleForm.reset();
         }
       }, (error) => {
-        this.router.navigate(['login']);
+        this.router.navigate(['error']);
       });
     } else {
       Swal.fire('Sorry could not create "' + schedule.scheduleName + '" schedule !',

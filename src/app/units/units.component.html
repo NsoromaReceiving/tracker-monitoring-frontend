@@ -244,8 +244,20 @@
                         </div>
                     </div>
 
+                    <div class="col-lg-3">
+                        <h5>Server</h5>
+                        <div class="input-group m-b">
+                            <span class="input-group-addon"><i class="fa fa-circle-o-notch"></i></span>
+                            <select class="form-control m-b" name="filter" #server>
+                            <option>All</option>
+                            <option>server_one</option>
+                            <option>server_two</option>
+                        </select>
+                        </div>
+                    </div>
+
                     <div class="col-lg-3" style="padding: 0px;">
-                        <mat-form-field class="example-full-width col-lg-12" >
+                        <mat-form-field class="example-full-width col-lg-12 m-t" >
                             <input matInput placeholder="Select Customer Trackers" (input)="customerTextChange($event.target.value)" aria-label="State" [matAutocomplete]="auto" [formControl]="customerCtrl">
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="setCustomer($event)" [displayWith]="customerDisplayFunction">
                                 <mat-option *ngFor="let customer of searchedCustomers" [value]="customer">
@@ -260,15 +272,71 @@
                     
                     <!--searchBtn-->
                     <div class="col-lg-3">
-                        <div class="input-group" style="margin-top: 10px;">
-                            <button type="button" class="btn btn-primary" (click)="getTrackers(StartDate.value, EndDate.value, trackerType.value, status.value)">
+                        <div class="input-group" style="margin-top: 25px;">
+                            <button type="button" class="btn btn-primary" (click)="getTrackers(StartDate.value, EndDate.value, trackerType.value, status.value, server.value)">
                                 <i class="fa fa-search"></i><span> Search</span>
                             </button> 
                         </div>
                     </div>
-                </div>                
+                </div>       
+                
+                <div class="mat-elevation-z8">
+                    <table mat-table matSort [dataSource]="dataSource">
+                  
+                      <!-- Position Column -->
+                      <ng-container matColumnDef="IMEI">
+                        <th mat-header-cell *matHeaderCellDef> IMEI </th>
+                        <td mat-cell *matCellDef="let element"> {{element.imei}} </td>
+                      </ng-container>
+                  
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="COMPANY">
+                        <th mat-header-cell *matHeaderCellDef> COMPANY </th>
+                        <td mat-cell *matCellDef="let element"> {{element.customerName}} </td>
+                      </ng-container>
+                  
+                      <!-- Weight Column -->
+                      <ng-container matColumnDef="REGISTRATION NO.">
+                        <th mat-header-cell *matHeaderCellDef> REGISTRATION NO. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.label}} </td>
+                      </ng-container>
+                  
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="LAST GSM UPDATE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="lastGpsUpdate"> LAST GSM UPDATE </th>
+                        <td mat-cell *matCellDef="let element"> {{element.lastGsmUpdate}} </td>
+                      </ng-container>
+
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="STATUS">
+                        <th mat-header-cell *matHeaderCellDef> STATUS </th>
+                        <td mat-cell *matCellDef="let element"> 
+                            <span class="label pull-left" [ngClass]="{'label-success':element.connectionStatus === 'active',
+                            'label-danger':element.connectionStatus === 'offline', 
+                            'label-warning':element.connectionStatus === 'signal_lost', 
+                            'label-info' : element.connectionStatus === 'idle', 
+                            'label-primary' : element.connectionStatus === 'just_registered' }">{{element.connectionStatus}}</span>
+                        </td>
+                      </ng-container>
+
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="ACTION">
+                        <th mat-header-cell *matHeaderCellDef> ACTION </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="btn-group">
+                                <button class="btn-white btn btn-xs" (click)="trackerStateNavigate(element.trackerId)"><i class="fa fa-folder"></i> View</button>
+                            </div>
+                        </td>
+                      </ng-container>
+                  
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                  
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                  </div>
   
-                <table class="footable table toggle-arrow-tiny table-striped" data-page-size="50" data-filter=#filter id="tblData">
+                <!--table class="footable table toggle-arrow-tiny table-striped" data-page-size="50" data-filter=#filter id="tblData">
                     <thead>
                     <tr>
                         <th>IMEI</th>
@@ -306,7 +374,7 @@
                             </td>
                         </tr>
                     </tfoot>
-                </table>
+                </table-->
   
               </div>
           </div>

@@ -53,9 +53,9 @@
               </div>
               <div class="hr-line-dashed"></div>
               <!--Reciepient Mail-->
-              <div class="form-group"><label class="col-sm-2 control-label m-t m-b">File Format</label>
-                <div class="col-lg-10 m-t m-b"><select formControlName="fileFormat" class="form-control">
-                  <option >Excell Sheet</option>
+              <div class="form-group"><label class="col-sm-2 control-label m-t m-b">Schedule Type</label>
+                <div class="col-lg-10 m-t m-b"><select formControlName="filterScheduleType" class="form-control">
+                  <option *ngFor="let type of scheduleType" [value]="type">{{ type }}</option>
                 </select>
               </div>
               </div>
@@ -118,11 +118,11 @@
                       <div class="col-lg-4  m-t m-b">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-stop"></i></span>
-                            <select class="form-control m-b" formControlName="filterModel" name="filterrr" #trackerType>
-                              <option *ngFor="let type of trackerTypes" [value]="type">{{ type }}</option>
+                            <select class="form-control m-b" formControlName="filterServer" name="filterrr" #server>
+                              <option *ngFor="let server of servers" [value]="server">{{ server }}</option>
                         </select>
                         </div>
-                        <h5 class="help-block m-b-none text-right">Tracker Type</h5>
+                        <h5 class="help-block m-b-none text-right">Server</h5>
                     </div>
 
   
@@ -180,7 +180,7 @@
                     <div class="row" style="padding: 0; padding-bottom: 20px;">
 
                       
-                      <div class="col-lg-4" style="padding: 0px;">
+                      <!--div class="col-lg-4" style="padding: 0px;">
                         <mat-form-field class="example-full-width col-sm-12">
                           <mat-label>Time Frame</mat-label>
                           <input type="number"  matInput formControlName="timeFrameCtrl">
@@ -192,7 +192,7 @@
                           <mat-label>Start Time Frame</mat-label>
                           <input type="number" matInput formControlName="startTimeFrameCtrl">
                         </mat-form-field>
-                      </div>
+                      </div-->
 
                       <div class="col-lg-4" style="padding: 0px;">
                         <mat-form-field class="example-full-width col-sm-12">

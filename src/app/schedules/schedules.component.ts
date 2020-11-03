@@ -1,30 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { APIcallsService } from '../apicalls.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AfterViewInit } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material';
 
 declare var $: any;
+
+export interface Schedule {
+  subject: string;
+  email: string;
+  alertTime: string;
+  scheduleId: string;
+}
 
 @Component({
   selector: 'app-schedules',
   templateUrl: './schedules.component.html',
   styleUrls: ['./schedules.component.css']
 })
-export class SchedulesComponent implements OnInit {
-  schedules: Array<any>;
+export class SchedulesComponent implements OnInit, AfterViewInit {
+
+
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  
+  schedules: Array<Schedule> = [];
   constructor(private apiService: APIcallsService, private router: Router) { }
 
-  ngOnInit() {
-    $(document).ready(() => {
-      this.apiService.getSchedules().subscribe((schedules: any) => {
-        this.schedules = schedules;
-        $.getScript('../../assets/js/loadfootable.js');
-      },
-      (error) => {
-        this.router.navigate(['login']);
-      });
+  displayedColumns: string[] = ['SUBJECT', 'EMAIL', 'ALERT TIME', 'ACTION'];
+
+  dataSource = new MatTableDataSource<Schedule>(this.schedules);
+
+  ngAfterViewInit() {
+    this.apiService.getSchedules().subscribe((schedules: any) => {
+      this.schedules = schedules;
+      this.dataSource = new MatTableDataSource<Schedule>(this.schedules);
+      this.dataSource.paginator = this.paginator;
+      console.log(schedules);
+    },
+    (error) => {
+      this.router.navigate(['error']);
     });
   }
+
+
+  ngOnInit() {  }
 
   scheduleNavigate(scheduleId) {
     this.router.navigate(['tracker/schedule', scheduleId]);

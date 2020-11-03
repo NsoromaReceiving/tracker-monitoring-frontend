@@ -1,9 +1,12 @@
-import { Component, OnInit, SystemJsNgModuleLoader } from '@angular/core';
+import { AfterViewInit, Component, OnInit, SystemJsNgModuleLoader } from '@angular/core';
 import { APIcallsService } from '../apicalls.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatSort } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+import { ViewChild } from '@angular/core';
 
 declare var $: any;
 
@@ -12,17 +15,27 @@ interface Customer {
   customerId: string;
 }
 
+export interface TrackerState {
+  imei: string;
+  customerName: string;
+  label: string;
+  lastGsmUpdate: string;
+  connectionStatus: string;
+  trackerId: string;
+}
+
 @Component({
   selector: 'app-units',
   templateUrl: './units.component.html',
   styleUrls: ['./units.component.css']
 })
 
-export class UnitsComponent implements OnInit {
+
+export class UnitsComponent implements OnInit, AfterViewInit {
 
   trackerUrl = 'http://134.209.26.203/api/trackers/';
 
-  trackerStates: Array<any>;
+  trackerStates: Array<TrackerState> = [];
   customers: Array<Customer> = [];
   searchedCustomers: Array<Customer>;
   trackerTypes: Array<string>;
@@ -38,34 +51,28 @@ export class UnitsComponent implements OnInit {
   customerCtrl: FormControl;
   selectedCustomer = null;
 
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
+
+
   constructor(private apiService: APIcallsService, private router: Router) { }
 
-  ngOnInit() {
-    $(document).ready(() => {
-      $.getScript('../../assets/js/datepicker.js');
-    });
+  displayedColumns: string[] = ['IMEI', 'COMPANY', 'REGISTRATION NO.', 'LAST GSM UPDATE', 'STATUS', 'ACTION'];
 
-    /*// date element setting
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 1);
-    this.startDate = `${startDate.getUTCMonth() + 1}/${startDate.getDate()}/${startDate.getFullYear()}`;
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate());
-    this.endDate = `${endDate.getUTCMonth() + 1}/${endDate.getDate()}/${endDate.getFullYear()}`;
-    */
-
-    // setting date to null
-    this.startDate = null;
-    this.endDate = null;
-
-    // auto complete search angular material element
-    this.customerCtrl = new FormControl();
+  dataSource = new MatTableDataSource<TrackerState>(this.trackerStates);
 
 
-    // fething all trackers
-    this.apiService.getTrackers(null, null, null, null, null).subscribe((trackerStates: any) => {
+  ngAfterViewInit() {
+    this.apiService.getTrackers(null, null, null, null, null, null).subscribe((trackerStates: any) => {
       this.trackerStates = trackerStates;
-      $.getScript('../../assets/js/loadfootable.js');
+      this.trackerStates.sort(function(a,b){
+        return new Date(b.lastGsmUpdate) - new Date(a.lastGsmUpdate);
+      });
+      this.dataSource = new MatTableDataSource<TrackerState>(this.trackerStates);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
       this.totalTrackers = this.trackerStates.length;
       this.activeTrackers = this.trackerStates.filter((trackerState) => trackerState.connectionStatus === 'active').length;
       this.offlineTrackers = this.trackerStates.filter((trackerState) => trackerState.connectionStatus === 'offline').length;
@@ -77,15 +84,33 @@ export class UnitsComponent implements OnInit {
       // get customers
 
     }, (error) => {
-      this.router.navigate(['login']);
+      this.router.navigate(['error']);
     });
 
     this.apiService.getCustomers().subscribe((customers: any) => {
       this.customers = customers;
       this.searchedCustomers = customers;
     }, (error) => {
-      this.router.navigate(['login']);
+      this.router.navigate(['error']);
     });
+
+  }
+  ngOnInit() {
+    $(document).ready(() => {
+      $.getScript('../../assets/js/datepicker.js');
+    });
+    
+
+    // setting date to null
+    this.startDate = null;
+    this.endDate = null;
+
+    // auto complete search angular material element
+    this.customerCtrl = new FormControl();
+
+
+    // fething all trackers
+  
 
   }
 
@@ -95,12 +120,19 @@ export class UnitsComponent implements OnInit {
   }
 
 
-  getTrackers(startDate, endDate, type, status) {
+  getTrackers(startDate, endDate, type, status, server) {
     if (type === 'All') {
       type = null;
     }
     if (status === 'All') {
       status =  null;
+    }
+    if  (server === 'All') {
+      server = null;
+    } else if(server == 'server_one') {
+      server = 1;
+    } else {
+      server = 2
     }
 
     // start date validation
@@ -145,8 +177,11 @@ export class UnitsComponent implements OnInit {
     console.log(type);
     console.log(status);
     console.log(this.selectedCustomer);
-    this.apiService.getTrackers(startDate, endDate, this.selectedCustomer, type, status).subscribe((trackerStates: any) => {
+    this.apiService.getTrackers(startDate, endDate, this.selectedCustomer, type, status, server).subscribe((trackerStates: any) => {
     this.trackerStates = trackerStates;
+    this.dataSource = new MatTableDataSource<TrackerState>(this.trackerStates);
+    this.dataSource.paginator = this.paginator;
+
 
     this.totalTrackers = this.trackerStates.length;
     this.activeTrackers = this.trackerStates.filter((trackerState) => trackerState.connectionStatus === 'active').length;
@@ -156,7 +191,7 @@ export class UnitsComponent implements OnInit {
     this.justRegisteredTrackers = this.trackerStates.filter((trackerState) =>
     trackerState.connectionStatus === 'just_registered').length;
     }, (error) => {
-      this.router.navigate(['login']);
+      this.router.navigate(['error']);
     });
   }
 

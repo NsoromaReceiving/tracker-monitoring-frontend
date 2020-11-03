@@ -18,10 +18,12 @@ interface Schedule {
   zoneId;
   status;
   subject;
-  scheduleId;
   timeFrame;
   endTimeFrame;
   startTimeFrame;
+  scheduleType;
+  server;
+  scheduleId;
 }
 
 interface Customer {
@@ -47,14 +49,11 @@ export class ScheduleComponent implements OnInit {
   searchedCustomers: Array<Customer>;
   selectedCustomer = null;
 
-  trackerTypes = ['All', 'bcefm_light', 'bce_fms500_light_vt', 'qlgv300_n', 'concoxgt06n_gt80', 'bce_fms500_light', 'bce_fms500_one',
-   'qlgv300_n_vt', 'qlgv55', 'qlgv65', 'telfmb640', 'telfmb120', 'telfma120_fw0119_vt', 'navixymobile_xgps', 'concoxgt100', 'qlgv65_vt',
-   'concox_at4', 'qlgv55_vt', 'concoxgt100_vt', 'telfma120_fw0119', 'bce_fms500_stcan_vt', 'qlgmt200_vt', 'concox_x1', 'telfmb630', 'box',
-   'qlgv320', 'qlgv300', 'qlgv65_n', 'telfmb120_vt_b120', 'qlgv320_vt', 'qlgl500_vt', 'box2_vt', 'mobile_unknown_xgps', 'concox_at2',
-   'qlgl500_qlgl505', 'box2', 'qlgv55lite', 'concox_wetrack2', 'iosnavixytracker_xgps', 'qlgv500', 'box_vt', 'bce_fms500_stcan',
-   'concox_x3', 'telfmb001', 'jimi_jc100'];
+   servers = ['All', 'server_one', 'server_two'];
 
    trackerStatus = ['All', 'active', 'offline', 'signal_lost', 'idle', 'just_registered'];
+
+   scheduleType = ["INHOUSE", "CLIENT"]
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
               private apiService: APIcallsService) { }
@@ -75,11 +74,12 @@ export class ScheduleComponent implements OnInit {
         filterStartDate: new FormControl(),
         filterEndDate: new FormControl(),
         filterStatus: new FormControl(),
-        filterModel: new FormControl(),
+        filterServer: new FormControl(),
         filterCustomer: new FormControl(),
         timeFrameCtrl: new FormControl(),
       startTimeFrameCtrl: new FormControl(),
-      endTimeFrameCtrl: new FormControl()
+      endTimeFrameCtrl: new FormControl(),
+      filterScheduleType: new FormControl()
       });
       this.scheduleForm.disable();
       this.disableBtn = true;
@@ -119,12 +119,22 @@ export class ScheduleComponent implements OnInit {
         if (this.schedule.status === null) {
           this.schedule.status = 'All';
         }
+
+        if(this.schedule.server === '1') {
+          this.schedule.server = 'server_one';
+        } else if(this.schedule.server = '2') {
+          this.schedule.server = 'server_two';
+        } else {
+          this.schedule.server = 'All';
+        }
+
         this.scheduleForm.controls.alertFrequency.setValue(this.schedule.alertFrequency);
         this.scheduleForm.controls.filterStatus.setValue(this.schedule.status);
-        this.scheduleForm.controls.filterModel.setValue(this.schedule.trackerType);
         this.scheduleForm.controls.timeFrameCtrl.setValue(Number(this.schedule.timeFrame));
         this.scheduleForm.controls.startTimeFrameCtrl.setValue(Number(this.schedule.startTimeFrame));
         this.scheduleForm.controls.endTimeFrameCtrl.setValue(Number(this.schedule.endTimeFrame));
+        this.scheduleForm.controls.filterScheduleType.setValue(this.schedule.scheduleType)
+        this.scheduleForm.controls.filterServer.setValue(this.schedule.server)
 
         if (this.schedule.startDate !== null) {
           const startDate = new Date(this.schedule.startDate);
@@ -142,7 +152,7 @@ export class ScheduleComponent implements OnInit {
           this.endDate = '';
         }
     }, (error) => {
-      this.router.navigate(['login']);
+      this.router.navigate(['error']);
     });
     });
   }
@@ -214,6 +224,14 @@ export class ScheduleComponent implements OnInit {
       schedule.endTimeFrameCtrl = null;
     }
 
+    if (schedule.filterServer === 'All') {
+      schedule.filterServer = null;
+    } else if(schedule.filterServer === 'server_one') {
+      schedule.filterServer = '1';
+    } else {
+      schedule.filterServer = '2';
+    }
+
 
     const fullAlertTime = new Date(alertDate + ' ' + alertTime);
 
@@ -226,14 +244,16 @@ export class ScheduleComponent implements OnInit {
         startDate: filterStartDate,
         endDate: filterEndDate,
         status: schedule.filterStatus,
-        trackerType: schedule.filterModel,
+        trackerType: null,
         alertTime: fullAlertTime.toISOString(),
         alertFrequency: schedule.alertFrequency,
         zoneId: zonId,
         scheduleId: this.scheduleId,
         timeFrame: schedule.timeFrameCtrl,
         endTimeFrame: schedule.endTimeFrameCtrl,
-        startTimeFrame: schedule.startTimeFrameCtrl
+        startTimeFrame: schedule.startTimeFrameCtrl,
+        scheduleType: schedule.filterScheduleType,
+        server: schedule.filterServer
       };
       console.log(newSchedule);
       this.apiService.updateSchedule(newSchedule, this.scheduleId).subscribe((response) => {
@@ -241,7 +261,7 @@ export class ScheduleComponent implements OnInit {
           Swal.fire('Great', 'Schedule Updated!', 'success');
         }
       }, (error) => {
-        this.router.navigate(['login']);
+        this.router.navigate(['error']);
       });
     } else {
       Swal.fire('Sorry could not update schedule !',
