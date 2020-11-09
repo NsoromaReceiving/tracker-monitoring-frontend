@@ -66,8 +66,8 @@ export class UnitsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.apiService.getTrackers(null, null, null, null, null, null).subscribe((trackerStates: any) => {
       this.trackerStates = trackerStates;
-      this.trackerStates.sort(function(a,b){
-        return new Date(b.lastGsmUpdate) - new Date(a.lastGsmUpdate);
+      this.trackerStates.sort(function(a: TrackerState,b: TrackerState){
+        return new Date(b.lastGsmUpdate).valueOf() - new Date(a.lastGsmUpdate).valueOf();
       });
       this.dataSource = new MatTableDataSource<TrackerState>(this.trackerStates);
       this.dataSource.paginator = this.paginator;
@@ -179,6 +179,9 @@ export class UnitsComponent implements OnInit, AfterViewInit {
     console.log(this.selectedCustomer);
     this.apiService.getTrackers(startDate, endDate, this.selectedCustomer, type, status, server).subscribe((trackerStates: any) => {
     this.trackerStates = trackerStates;
+    this.trackerStates.sort(function(a: TrackerState,b: TrackerState){
+      return new Date(b.lastGsmUpdate).valueOf() - new Date(a.lastGsmUpdate).valueOf();
+    });
     this.dataSource = new MatTableDataSource<TrackerState>(this.trackerStates);
     this.dataSource.paginator = this.paginator;
 
