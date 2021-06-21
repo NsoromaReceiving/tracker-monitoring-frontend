@@ -29,6 +29,7 @@ export class APIcallsService {
   loginUrl = 'security/login';
   tokenExpireUrl = 'security/expire?&token=';
   validateTokenUrl = 'security/validate/';
+  
 
 
   constructor(private http: HttpClient, private cookies: CookieService) {
